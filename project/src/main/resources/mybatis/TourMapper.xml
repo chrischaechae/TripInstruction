@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="tour">
+	<!-- 회원용 -->
+	<select id="selectAll_eastasia" resultType="TourBean">
+		select * from tour where land='동아시아' order by country
+	</select>
+	<select id="selectAll_southeastasia" resultType="TourBean">
+		select * from tour where land='동남아시아' order by country
+	</select>
+
+	<select id="selectAll_america" resultType="TourBean">
+		select * from tour where land='아메리카' order by country
+	</select>
+	
+	<select id="selectAll_europe" resultType="TourBean">
+		select * from tour where land='유럽' order by country
+	</select>
+	
+	<select id="selectAll_pacific" resultType="TourBean">
+		select * from tour where land='남태평양' order by country
+	</select>
+	
+	<select id="selectAll_africa" resultType="TourBean">
+		select * from tour where land='아프리카' order by country
+	</select>
+	<!-- 테마 -->
+	<select id="selectAll_theme" resultType="TourBean">
+		select * from tour where theme='힐링' order by country
+	</select>
+	<select id="selectAll_themesnap" resultType="TourBean">
+		select * from tour where theme='스냅' order by country
+	</select>
+	<select id="selectAll_themeactivity" resultType="TourBean">
+		select * from tour where theme='엑티비티' order by country
+	</select>
+	<select id="selectAll_themefood" resultType="TourBean">
+		select * from tour where theme='식도락' order by country
+	</select>
+	<select id="selectAll_thememovie" resultType="TourBean">
+		select * from tour where theme='영화' order by country
+	</select>
+	<select id="selectAll_themesports" resultType="TourBean">
+		select * from tour where theme='스포츠' order by country
+	</select>
+	<!-- 테마끝 -->
+	
+<!-- home 검색 -->
+	<select id="homeSearch" resultType="TourBean">
+		select * from tour
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="searchType=='country' and keyword != null and keyword != '' ">
+				AND country like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='city' and keyword != null and keyword != '' ">
+				AND city like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='theme' and keyword != null and keyword != '' ">
+				AND theme like CONCAT('%', #{keyword}, '%')
+			</if>	
+		</trim>
+		order by tour_no desc
+	</select>
+	<!--  detail join guide -->
+	<resultMap type="TourBean" id="TourMap">
+		<result property="tour_no" column="tour_no"/>
+		<result property="land" column="land"/>
+		<result property="country" column="country"/>
+		<result property="city" column="city"/>
+		<result property="name" column="name"/>
+		<result property="cost" column="cost"/>
+		<result property="vehicle" column="vehicle"/>
+		<result property="theme" column="theme"/>
+		<result property="comments" column="comments"/>
+		<result property="course" column="course"/>
+		<result property="latlng" column="latlng"/>
+		<result property="mainimg" column="mainimg"/>
+		<result property="firstimg" column="firstimg"/>
+		<result property="secondimg" column="secondimg"/>
+		<result property="thirdimg" column="thirdimg"/>
+		
+		<association property="GuideVo" resultMap="GuideVo"/>
+	</resultMap>
+	
+	<resultMap type="GuideBean" id="GuideVo">
+		<result property="guide_name" column="guide_name"/>
+		<result property="guide_city" column="guide_city"/>
+	</resultMap>
+	
+	<select id="selectOne_tour" parameterType="TourBean" resultMap="TourMap" >
+		select tour.tour_no,tour.land,tour.country,tour.name,tour.city,tour.cost,tour.vehicle,tour.theme,tour.comments,tour.course,tour.latlng,tour.mainimg,tour.firstimg,tour.secondimg,tour.thirdimg,guide.guide_name from tour inner join guide on tour.city=guide.guide_city where tour_no=#{value}
+	</select>
+	
+	<!-- paidDB 에 넣는 쿼리문 -->
+	<insert id="insertOne_tour" parameterType="PaidBean">
+		insert into paid (tour_no,client_name,paid_name,paid_phone,paid_birth,paid_count,paid_kakaoid,tour_date,book_date,paid_total,paid_state,paid_confirm) values (#{tour_no},#{client_name},#{paid_name},#{paid_phone},#{paid_birth},#{paid_count},#{paid_kakaoid},#{tour_date},now(),#{paid_total},'미결제','미확정')
+	</insert>
+	
+	<!-- 관리자용(system) -->
+	
+		<select id="selectAll_tour" resultType="TourBean">
+		select * from tour
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="searchType=='country' and keyword != null and keyword != '' ">
+				AND country like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='city' and keyword != null and keyword != '' ">
+				AND city like CONCAT('%', #{keyword}, '%')
+			</if>	
+		</trim>
+		 order by tour_no
+		LIMIT #{startList}, #{listSize}
+	</select>
+	
+	<select id="selectAll_tour_arrayland" resultType="TourBean">
+		select * from tour
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="searchType=='country' and keyword != null and keyword != '' ">
+				AND country like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='city' and keyword != null and keyword != '' ">
+				AND city like CONCAT('%', #{keyword}, '%')
+			</if>	
+		</trim>
+		 order by land
+		LIMIT #{startList}, #{listSize}
+	</select>
+	
+	<select id="selectAll_tour_arraycountry" resultType="TourBean">
+		select * from tour
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="searchType=='country' and keyword != null and keyword != '' ">
+				AND country like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='city' and keyword != null and keyword != '' ">
+				AND city like CONCAT('%', #{keyword}, '%')
+			</if>	
+		</trim>
+		 order by country
+		LIMIT #{startList}, #{listSize}
+	</select>
+	
+	<select id="getallTourListCnt" resultType="int">
+		select count(*) from tour
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="searchType=='country' and keyword != null and keyword != '' ">
+				AND country like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='city' and keyword != null and keyword != '' ">
+				AND city like CONCAT('%', #{keyword}, '%')
+			</if>
+		</trim>
+	</select>
+	
+	<update id="updateOne_tour" parameterType="TourBean">
+		update tour set theme=#{theme},name=#{name},vehicle=#{vehicle},cost=#{cost},comments=#{comments},course=#{course},mainimg=#{mainimg},firstimg=#{firstimg},secondimg=#{secondimg},thirdimg=#{thirdimg} where tour_no=#{tour_no}
+	</update>
+		
+	<select id="selectAll_recomm1" resultType="TourBean">
+		SELECT * FROM travel.tour where tour_no=15 or tour_no=26 or tour_no=31 or tour_no=38
+	</select>
+	<select id="selectAll_recomm2" resultType="TourBean">
+		SELECT * FROM travel.tour where tour_no=7 or tour_no=23 or tour_no=20 or tour_no=37
+	</select>
+	<select id="selectAll_recomm3" resultType="TourBean">
+		SELECT * FROM travel.tour where tour_no=12 or tour_no=14 or tour_no=32 or tour_no=33
+	</select>
+</mapper>
+

@@ -1,0 +1,19 @@
+/* 나라정렬버튼 + 검색조회버튼 */
+	#dropdownMenu1, #searchType {
+		border-radius:5px;
+		font-size:14px;
+		text-align:center;
+		height:33px;
+		width:79px;
+		cursor: pointer;
+		padding:0px 0px 0px 13px;
+		display:inline-block;
+		font-family:'Jua';
+	}
+/* 페이징 */
+	#listCnt {
+		width:250px;
+		background-color:white;
+		border:0;
+		color:gray;
+	}

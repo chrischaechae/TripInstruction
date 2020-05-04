@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+	board_id < 투어 : 1 / 후기 : 2 / 동행 : 3 / 게시판 : 4 / 이벤트 : 5 >
+	board_theme < 힐링 : 1 / 스탭 : 2 / 액티비티 : 3 / 먹거리 : 4 / 영화 : 5 / 스포츠 : 6 >
+	board_wish < 안찜 : 0 / 찜 : 1 >
+	staff_team < 경영 : 1 / 인사 : 2 / CS : 3 / 디자인 : 4 / 마케팅 : 5 >
+	paid_state < 미결제 : 0 / 결제 : 1 >
+	paid_confirm < 미확정 : 0 / 확정 : 1 >
+ -->
+
+ 
+<mapper namespace="free">
+
+	<select id="selectAll_free" resultType="FreeBean">
+		select * from free
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="searchType=='free_sub' and keyword != null and keyword != '' ">
+				AND free_sub like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='client_nick1' and keyword != null and keyword != '' ">
+				AND client_nick1 like CONCAT('%', #{keyword}, '%')
+			</if>
+		</trim>
+		ORDER BY board_no DESC
+		LIMIT #{startList}, #{listSize}
+	</select>
+	
+
+	
+	<select id="selectOne_free" resultType="FreeBean" parameterType="int">
+		select * from free where board_no=#{value}
+	</select>
+	
+	
+	<insert id="insertOne_free" parameterType="FreeBean">
+		insert into free (board_id, free_sub, free_count, free_content, client_nick1, free_date, free_img, free_thumb) values (4, #{free_sub}, 0, #{free_content}, #{client_nick1}, now(), #{free_img, jdbcType=VARCHAR}, #{free_thumb, jdbcType=VARCHAR})
+	</insert>
+	
+	
+	
+	<update id="updateOne_free" parameterType="FreeBean">
+		update free set free_sub=#{free_sub}, free_content=#{free_content}, free_img=#{free_img}, free_thumb=#{free_thumb} where board_no=#{board_no}
+	</update>
+	
+
+
+	<delete id="deleteOne_free" parameterType="int">
+		delete from free where board_no=#{value}
+	</delete>
+	
+	
+	
+<!-- 조회수 -->
+	<update id="updateCnt" parameterType="int">
+		update free set free_count=free_count+1 where board_no=#{value}
+	</update>
+	
+<!-- 총게시글 갯수 -->
+	<select id="getFreeListCnt" resultType="int">
+		select count(*) from free
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="searchType=='free_sub' and keyword != null and keyword != '' ">
+				AND free_sub like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='client_nick1' and keyword != null and keyword != '' ">
+				AND client_nick1 like CONCAT('%', #{keyword}, '%')
+			</if>
+		</trim>
+	</select>
+	
+</mapper>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ 
+<mapper namespace="paid">
+	<!-- 개인결제내역 -->	
+	<select id="selectAll_paid" resultType="PaidBean" parameterType="PaidBean" resultMap="PaidMap">
+		select paid.paid_no,paid.tour_no,paid.client_name,paid.paid_name,paid.paid_phone,paid.paid_birth,paid.paid_count,paid.paid_kakaoid,paid.tour_date,paid.book_date,paid.paid_total,paid.paid_date,paid.paid_state,paid.paid_confirm,tour.city,tour.name from paid inner join tour on paid.tour_no=tour.tour_no
+		 where client_name=#{client_name} order by paid_no desc
+		LIMIT #{startList}, #{listSize}
+	</select>
+<!-- 결제상태 정렬 -->
+	<select id="selectAll_paidState" resultType="PaidBean" parameterType="PaidBean" resultMap="PaidMap">
+		select paid.paid_no,paid.tour_no,paid.client_name,paid.paid_name,paid.paid_phone,paid.paid_birth,paid.paid_count,paid.paid_kakaoid,paid.tour_date,paid.book_date,paid.paid_total,paid.paid_date,paid.paid_state,paid.paid_confirm,tour.city,tour.name from paid inner join tour on paid.tour_no=tour.tour_no
+		where client_name=#{client_name} order by paid_state desc
+		LIMIT #{startList}, #{listSize}
+	</select>
+	
+<!-- 확정여부 정렬 -->
+	<select id="selectAll_paidConfirm" resultType="PaidBean" parameterType="PaidBean" resultMap="PaidMap">
+		select paid.paid_no,paid.tour_no,paid.client_name,paid.paid_name,paid.paid_phone,paid.paid_birth,paid.paid_count,paid.paid_kakaoid,paid.tour_date,paid.book_date,paid.paid_total,paid.paid_date,paid.paid_state,paid.paid_confirm,tour.city,tour.name from paid inner join tour on paid.tour_no=tour.tour_no
+		where client_name=#{client_name} order by paid_confirm desc
+		LIMIT #{startList}, #{listSize}
+	</select>
+<!-- 출발일 정렬 -->
+	<select id="selectAll_paidDate" resultType="PaidBean" parameterType="PaidBean" resultMap="PaidMap">
+		select paid.paid_no,paid.tour_no,paid.client_name,paid.paid_name,paid.paid_phone,paid.paid_birth,paid.paid_count,paid.paid_kakaoid,paid.tour_date,paid.book_date,paid.paid_total,paid.paid_date,paid.paid_state,paid.paid_confirm,tour.city,tour.name from paid inner join tour on paid.tour_no=tour.tour_no
+		where client_name=#{client_name} order by tour_date desc
+		LIMIT #{startList}, #{listSize}
+	</select>
+	<select id="getPaidListCnt" resultType="int">
+		select count(*) from paid where client_name=#{client_name}
+	</select>
+	<!--  paid join tour -->
+	<resultMap type="PaidBean" id="PaidMap">
+		<result property="paid_no" column="paid_no"/>
+		<result property="tour_no" column="tour_no"/>
+		<result property="client_name" column="client_name"/>
+		<result property="paid_name" column="paid_name"/>
+		<result property="paid_phone" column="paid_phone"/>
+		<result property="paid_birth" column="paid_birth"/>
+		<result property="paid_count" column="paid_count"/>
+		<result property="paid_kakaoid" column="paid_kakaoid"/>
+		<result property="tour_date" column="tour_date"/>
+		<result property="book_date" column="book_date"/>
+		<result property="paid_total" column="paid_total"/>
+		<result property="paid_date" column="paid_date"/>
+		<result property="paid_state" column="paid_state"/>
+		<result property="paid_confirm" column="paid_confirm"/>
+		
+		
+		<association property="TourVo" resultMap="TourVo"/>
+	</resultMap>
+	
+	<resultMap type="TourBean" id="TourVo">
+		<result property="tour_no" column="tour_no"/>
+		<result property="city" column="city"/>
+		<result property="name" column="name"/>
+	</resultMap>
+	
+	<select id="selectOne_paid" parameterType="PaidBean" resultMap="PaidMap" >
+		select paid.paid_no, paid.tour_no, paid.client_name, paid.paid_name, paid.paid_phone, paid.paid_birth, paid.paid_count, paid.paid_kakaoid, paid.tour_date, paid.book_date, paid.paid_total, paid.paid_date,paid.paid_state,paid.paid_confirm,tour.city,tour.name from paid inner join tour on paid.tour_no=tour.tour_no where paid_no=#{value}
+	</select>
+
+	
+
+
+	<update id="paid_confirm" parameterType="PaidBean">
+		update paid set paid_date=now(),paid_state='결제완료' where paid_no=#{paid_no}
+	</update>
+	
+	
+<!-- 시스템에서 결제내역(총) -->	
+	<select id="selectAll_allpaid" resultType="PaidBean">
+		select * from paid
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="searchType=='client_name' and keyword != null and keyword != '' ">
+				AND client_name like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='paid_name' and keyword != null and keyword != '' ">
+				AND paid_name like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='paid_state' and keyword != null and keyword != '' ">
+				AND paid_state like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='paid_confirm' and keyword != null and keyword != '' ">
+				AND paid_confirm like CONCAT('%', #{keyword}, '%')
+			</if>
+		</trim>
+		 order by paid_no desc
+		LIMIT #{startList}, #{listSize}
+	</select>
+	
+<!-- 총게시글 갯수 -->
+	<select id="getallPaidListCnt" resultType="int">
+		select count(*) from paid
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="searchType=='client_name' and keyword != null and keyword != '' ">
+				AND client_name like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='paid_name' and keyword != null and keyword != '' ">
+				AND paid_name like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='paid_state' and keyword != null and keyword != '' ">
+				AND paid_state like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='paid_confirm' and keyword != null and keyword != '' ">
+				AND paid_confirm like CONCAT('%', #{keyword}, '%')
+			</if>
+		</trim>
+	</select>
+	
+	<update id="allpaid_confirm" parameterType="PaidBean">
+		update paid set paid_confirm='확정' where paid_no=#{paid_no}
+	</update>
+</mapper>

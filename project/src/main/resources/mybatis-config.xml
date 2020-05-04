@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+  
+  <configuration>
+  	<typeAliases>
+  		<typeAlias alias="BoardBean" type="com.bit.project.model.entity.BoardVo"/>
+  		<typeAlias alias="ClientBean" type="com.bit.project.model.entity.ClientVo"/>
+  		<typeAlias alias="FaqBean" type="com.bit.project.model.entity.FaqVo"/>
+  		<typeAlias alias="GuideBean" type="com.bit.project.model.entity.GuideVo"/>
+  		<typeAlias alias="NoticeBean" type="com.bit.project.model.entity.NoticeVo"/>
+  		<typeAlias alias="PaidBean" type="com.bit.project.model.entity.PaidVo"/>
+  		<typeAlias alias="ReceiveBean" type="com.bit.project.model.entity.ReceiveVo"/>
+  		<typeAlias alias="ReplyBean" type="com.bit.project.model.entity.ReplyVo"/>
+  		<typeAlias alias="SendBean" type="com.bit.project.model.entity.SendVo"/>
+  		<typeAlias alias="StaffBean" type="com.bit.project.model.entity.StaffVo"/>
+  		<typeAlias alias="TourBean" type="com.bit.project.model.entity.TourVo"/>
+  		<typeAlias alias="FreeBean" type="com.bit.project.model.entity.FreeVo"/>
+  		<typeAlias alias="PartnerBean" type="com.bit.project.model.entity.PartnerVo"/>
+  		<typeAlias alias="EventBean" type="com.bit.project.model.entity.EventVo"/>
+  		<typeAlias alias="MapBean" type="com.bit.project.model.entity.MapVo"/>
+  		<typeAlias alias="PaidBean" type="com.bit.project.model.entity.PaidVo"/>
+  		<typeAlias alias="WishBean" type="com.bit.project.model.entity.WishVo"/>
+  	</typeAliases>
+  	
+  	<mappers>
+  		<mapper resource="mybatis/BoardMapper.xml"/>
+  		<mapper resource="mybatis/ClientMapper.xml"/>
+  		<mapper resource="mybatis/FaqMapper.xml"/>
+  		<mapper resource="mybatis/GuideMapper.xml"/>
+  		<mapper resource="mybatis/NoticeMapper.xml"/>
+  		<mapper resource="mybatis/PaidMapper.xml"/>
+  		<mapper resource="mybatis/ReceiveMapper.xml"/>
+  		<mapper resource="mybatis/ReplyMapper.xml"/>
+  		<mapper resource="mybatis/SendMapper.xml"/>
+  		<mapper resource="mybatis/StaffMapper.xml"/>
+  		<mapper resource="mybatis/TourMapper.xml"/>
+  		<mapper resource="mybatis/FreeMapper.xml"/>
+  		<mapper resource="mybatis/PartnerMapper.xml"/>
+  		<mapper resource="mybatis/EventMapper.xml"/>
+  		<mapper resource="mybatis/MapMapper.xml"/>
+  		<mapper resource="mybatis/PaidMapper.xml"/>
+  		<mapper resource="mybatis/WishMapper.xml"/>
+  	</mappers>
+  </configuration>

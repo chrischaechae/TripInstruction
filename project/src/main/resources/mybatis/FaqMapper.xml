@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  
+<!--
+	board_id < 투어 : 1 / 후기 : 2 / 동행 : 3 / 게시판 : 4 / 이벤트 : 5 >
+	board_theme < 힐링 : 1 / 스탭 : 2 / 액티비티 : 3 / 먹거리 : 4 / 영화 : 5 / 스포츠 : 6 >
+	board_wish < 안찜 : 0 / 찜 : 1 >
+	staff_team < 경영 : 1 / 인사 : 2 / CS : 3 / 디자인 : 4 / 마케팅 : 5 >
+	paid_state < 미결제 : 0 / 결제 : 1 >
+	paid_confirm < 미확정 : 0 / 확정 : 1 >
+ -->
+ 
+ 
+<mapper namespace="faq">
+	<select id="selectAll_faq" resultType="FaqBean">
+		select * from faq
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="searchType=='faq_question' and keyword != null and keyword != '' ">
+				AND faq_question like CONCAT('%', #{keyword}, '%')
+			</if>
+		</trim>
+		order by faq_no desc
+	</select>
+	
+	<insert id="insertOne_faq" parameterType="FaqBean">
+		insert into faq (faq_question, faq_answer) values (#{faq_question}, #{faq_answer})
+	</insert>
+	
+	<update id="updateOne_faq" parameterType="FaqBean">
+		update faq set faq_question=#{faq_question}, faq_answer=#{faq_answer} where faq_no=#{faq_no}
+	</update>
+	
+	<delete id="deleteOne_faq" parameterType="int">
+		delete from faq where faq_no=#{faq_no}
+	</delete>
+</mapper>

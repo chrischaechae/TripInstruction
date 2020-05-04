@@ -1,0 +1,231 @@
+CREATE TABLE `client` (
+  `client_no` int NOT NULL AUTO_INCREMENT,
+  `client_nick1` varchar(15) NOT NULL,
+  `client_nick2` varchar(15) NOT NULL,
+  `client_name` varchar(8) NOT NULL,
+  `client_phone` varchar(11) NOT NULL,
+  `client_sex` int NOT NULL,
+  `client_birth` varchar(8) NOT NULL,
+  `client_id` varchar(20) NOT NULL,
+  `client_pw` varchar(15) NOT NULL,
+  `client_email` varchar(45) DEFAULT NULL,
+  `client_kakaoid` varchar(20) DEFAULT NULL,
+  `client_joindate` datetime NOT NULL,
+  PRIMARY KEY (`client_nick1`),
+  UNIQUE KEY `client_no_UNIQUE` (`client_no`),
+  UNIQUE KEY `client_phone_UNIQUE` (`client_phone`),
+  UNIQUE KEY `client_nick2_UNIQUE` (`client_nick2`),
+  UNIQUE KEY `client_id_UNIQUE` (`client_id`),
+  UNIQUE KEY `client_kakaoid_UNIQUE` (`client_kakaoid`),
+  UNIQUE KEY `client_email_UNIQUE` (`client_email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `staff` (
+  `staff_no` int NOT NULL AUTO_INCREMENT,
+  `staff_name` varchar(8) NOT NULL,
+  `staff_phone` varchar(11) NOT NULL,
+  `staff_email` varchar(30) DEFAULT NULL,
+  `staff_team` varchar(10) NOT NULL,
+  `staff_joindate` datetime DEFAULT NULL,
+  `staff_pw` varchar(15) DEFAULT NULL,
+  `staff_img` varchar(300) DEFAULT NULL,
+  `staff_thumb` varchar(300) DEFAULT NULL,
+  PRIMARY KEY (`staff_no`,`staff_team`),
+  UNIQUE KEY `staff__UNIQUE` (`staff_phone`)
+) ENGINE=InnoDB AUTO_INCREMENT=1000121 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `board` (
+  `board_no` int NOT NULL AUTO_INCREMENT,
+  `board_id` int NOT NULL,
+  `board_sub` varchar(50) NOT NULL,
+  `board_count` int NOT NULL,
+  `board_content` varchar(3000) NOT NULL,
+  `client_nick1` varchar(15) NOT NULL,
+  `board_date` datetime NOT NULL,
+  `board_land` varchar(10) DEFAULT NULL,
+  `board_theme` varchar(12) DEFAULT NULL,
+  `board_img` varchar(300) DEFAULT NULL,
+  `board_thumb` varchar(300) DEFAULT NULL,
+  PRIMARY KEY (`board_no`),
+  KEY `board_nick_fk_idx` (`client_nick1`),
+  CONSTRAINT `board_nick_fk` FOREIGN KEY (`client_nick1`) REFERENCES `client` (`client_nick1`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `partner` (
+  `board_no` int NOT NULL AUTO_INCREMENT,
+  `board_id` int NOT NULL,
+  `partner_sub` varchar(50) NOT NULL,
+  `partner_count` int NOT NULL,
+  `partner_content` varchar(3000) NOT NULL,
+  `client_nick1` varchar(15) NOT NULL,
+  `partner_date` datetime NOT NULL,
+  `partner_img` varchar(300) DEFAULT NULL,
+  `partner_thumb` varchar(300) DEFAULT NULL,
+  PRIMARY KEY (`board_no`),
+  KEY `partner_nick_fk_idx` (`client_nick1`),
+  CONSTRAINT `partner_nick_fk` FOREIGN KEY (`client_nick1`) REFERENCES `client` (`client_nick1`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `free` (
+  `board_no` int NOT NULL AUTO_INCREMENT,
+  `board_id` int NOT NULL,
+  `free_sub` varchar(50) NOT NULL,
+  `free_count` int NOT NULL,
+  `free_content` varchar(3000) NOT NULL,
+  `client_nick1` varchar(15) NOT NULL,
+  `free_date` datetime NOT NULL,
+  `free_img` varchar(300) DEFAULT NULL,
+  `free_thumb` varchar(300) DEFAULT NULL,
+  PRIMARY KEY (`board_no`),
+  KEY `free_nick_fk_idx` (`client_nick1`),
+  CONSTRAINT `free_nick_fk` FOREIGN KEY (`client_nick1`) REFERENCES `client` (`client_nick1`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `event` (
+  `board_no` int NOT NULL AUTO_INCREMENT,
+  `board_id` int NOT NULL,
+  `event_sub` varchar(50) NOT NULL,
+  `event_count` int NOT NULL,
+  `event_content` varchar(3000) NOT NULL,
+  `event_date` datetime NOT NULL,
+  `event_img` varchar(300) DEFAULT NULL,
+  `event_thumb` varchar(300) DEFAULT NULL,
+  PRIMARY KEY (`board_no`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `notice` (
+  `notice_no` int NOT NULL AUTO_INCREMENT,
+  `notice_count` int NOT NULL,
+  `notice_date` datetime NOT NULL,
+  `notice_sub` varchar(50) NOT NULL,
+  `notice_content` varchar(1000) NOT NULL,
+  `notice_img` varchar(300) DEFAULT NULL,
+  `notice_thumb` varchar(300) DEFAULT NULL,
+  PRIMARY KEY (`notice_no`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `faq` (
+  `faq_no` int NOT NULL AUTO_INCREMENT,
+  `faq_question` varchar(100) NOT NULL,
+  `faq_answer` varchar(300) NOT NULL,
+  PRIMARY KEY (`faq_no`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `reply` (
+  `reply_no` int NOT NULL AUTO_INCREMENT,
+  `board_id` int NOT NULL,
+  `board_no` int NOT NULL,
+  `client_nick1` varchar(15) NOT NULL,
+  `reply_content` varchar(200) NOT NULL,
+  `reply_date` datetime NOT NULL,
+  PRIMARY KEY (`reply_no`),
+  KEY `reply_no_fk_idx` (`board_no`),
+  KEY `reply_nick_fk_idx` (`client_nick1`),
+  CONSTRAINT `reply_nick_fk` FOREIGN KEY (`client_nick1`) REFERENCES `client` (`client_nick1`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `reply_no_fk` FOREIGN KEY (`board_no`) REFERENCES `board` (`board_no`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tour` (
+  `tour_no` int NOT NULL AUTO_INCREMENT,
+  `land` varchar(10) NOT NULL,
+  `country` varchar(30) NOT NULL,
+  `city` varchar(30) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `theme` varchar(10) DEFAULT NULL,
+  `vehicle` varchar(10) NOT NULL,
+  `cost` int NOT NULL,
+  `comments` varchar(100) NOT NULL,
+  `course` varchar(300) NOT NULL,
+  `latlng` varchar(100) NOT NULL,
+  `mainimg` varchar(300) NOT NULL,
+  `firstimg` varchar(300) NOT NULL,
+  `secondimg` varchar(300) NOT NULL,
+  `thirdimg` varchar(300) NOT NULL,
+  PRIMARY KEY (`tour_no`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `map` (
+  `latlng_no` int NOT NULL AUTO_INCREMENT,
+  `country` varchar(20) NOT NULL,
+  `city` varchar(20) NOT NULL,
+  `tour_name` varchar(200) NOT NULL,
+  `spot` varchar(20) NOT NULL,
+  `latlng` varchar(200) NOT NULL,
+  PRIMARY KEY (`latlng_no`),
+  UNIQUE KEY `latlng_no_UNIQUE` (`latlng_no`),
+  UNIQUE KEY `LatLng_UNIQUE` (`latlng`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `guide` (
+  `guide_no` int NOT NULL AUTO_INCREMENT,
+  `guide_name` varchar(8) NOT NULL,
+  `guide_phone` varchar(11) NOT NULL,
+  `guide_city` varchar(10) NOT NULL,
+  `guide_email` varchar(30) NOT NULL,
+  `guide_img` varchar(300) DEFAULT NULL,
+  `guide_thumb` varchar(300) DEFAULT NULL,
+  PRIMARY KEY (`guide_no`),
+  UNIQUE KEY `guide_phone_UNIQUE` (`guide_phone`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `paid` (
+  `paid_no` int NOT NULL AUTO_INCREMENT,
+  `tour_no` int NOT NULL,
+  `client_name` varchar(45) NOT NULL,
+  `paid_name` varchar(8) NOT NULL,
+  `paid_phone` int NOT NULL,
+  `paid_birth` int NOT NULL,
+  `paid_count` int NOT NULL,
+  `paid_kakaoid` varchar(20) DEFAULT NULL,
+  `tour_date` varchar(15) NOT NULL,
+  `book_date` datetime NOT NULL,
+  `paid_total` int NOT NULL,
+  `paid_date` datetime DEFAULT NULL,
+  `paid_state` varchar(10) DEFAULT NULL,
+  `paid_confirm` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`paid_no`),
+  UNIQUE KEY `paid_no_UNIQUE` (`paid_no`),
+  UNIQUE KEY `tour_no_UNIQUE` (`tour_no`),
+  KEY `paid_board_sub_fk_idx` (`tour_no`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `send` (
+  `send_no` int NOT NULL AUTO_INCREMENT,
+  `client_nick1` varchar(20) NOT NULL,
+  `client_nick2` varchar(20) NOT NULL,
+  `send_content` varchar(500) NOT NULL,
+  `send_date` datetime NOT NULL,
+  PRIMARY KEY (`send_no`),
+  KEY `client_nick1_idx` (`client_nick1`),
+  KEY `client_nick2_fk_idx` (`client_nick2`),
+  CONSTRAINT `send_client_nick1_fk` FOREIGN KEY (`client_nick1`) REFERENCES `client` (`client_nick1`),
+  CONSTRAINT `send_client_nick2_fk` FOREIGN KEY (`client_nick2`) REFERENCES `client` (`client_nick2`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+<<send after insert trigger>
+CREATE DEFINER=`hong`@`%` TRIGGER `send_AFTER_INSERT` AFTER INSERT ON `send` FOR EACH ROW BEGIN
+insert into receive (client_nick1, client_nick2, receive_content, receive_date, receive_status) (select client_nick1, client_nick2, send_content, send_date, 0 from send order by send_no desc limit 1) ;
+END
+
+CREATE TABLE `receive` (
+  `receive_no` int NOT NULL AUTO_INCREMENT,
+  `client_nick1` varchar(20) DEFAULT NULL,
+  `client_nick2` varchar(20) DEFAULT NULL,
+  `receive_content` varchar(500) NOT NULL,
+  `receive_date` datetime NOT NULL,
+  `receive_status` int DEFAULT NULL,
+  PRIMARY KEY (`receive_no`),
+  KEY `receive_client_nick1_fk_idx` (`client_nick1`),
+  KEY `receive_client_nick2_fk_idx` (`client_nick2`),
+  CONSTRAINT `receive_client_nick1_fk` FOREIGN KEY (`client_nick1`) REFERENCES `client` (`client_nick1`),
+  CONSTRAINT `receive_client_nick2_fk` FOREIGN KEY (`client_nick2`) REFERENCES `client` (`client_nick2`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `wish` (
+  `wish_no` int NOT NULL AUTO_INCREMENT,
+  `tour_no` int NOT NULL,
+  `client_name` varchar(10) NOT NULL,
+  `wishchk` varchar(45) NOT NULL,
+  PRIMARY KEY (`wish_no`),
+  UNIQUE KEY `wish_no_UNIQUE` (`wish_no`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

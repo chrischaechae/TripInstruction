@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+	board_id < 투어 : 1 / 후기 : 2 / 동행 : 3 / 게시판 : 4 / 이벤트 : 5 >
+	board_theme < 힐링 : 1 / 스탭 : 2 / 액티비티 : 3 / 먹거리 : 4 / 영화 : 5 / 스포츠 : 6 >
+	board_wish < 안찜 : 0 / 찜 : 1 >
+	staff_team < 경영 : 1 / 인사 : 2 / CS : 3 / 디자인 : 4 / 마케팅 : 5 >
+	paid_state < 미결제 : 0 / 결제 : 1 >
+	paid_confirm < 미확정 : 0 / 확정 : 1 >
+ -->
+
+ 
+<mapper namespace="board">
+
+<!-- 후기 기본 정렬 (작성 순서) -->
+	<select id="selectAll_review" resultType="BoardBean">
+		select * from board
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="searchType=='board_sub' and keyword != null and keyword != '' ">
+				AND board_sub like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='board_land' and keyword != null and keyword != '' ">
+				AND board_land like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='board_theme' and keyword != null and keyword != '' ">
+				AND board_theme like CONCAT('%', #{keyword}, '%')
+			</if>	
+		</trim>
+		ORDER BY board_no DESC
+		LIMIT #{startList}, #{listSize}
+	</select>
+<!-- 후기 도시별 정렬 -->
+	<select id="selectAll_reviewCity" resultType="BoardBean">
+		select * from board
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="searchType=='board_sub' and keyword != null and keyword != '' ">
+				AND board_sub like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='board_land' and keyword != null and keyword != '' ">
+				AND board_land like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='board_theme' and keyword != null and keyword != '' ">
+				AND board_theme like CONCAT('%', #{keyword}, '%')
+			</if>	
+		</trim>
+		ORDER BY board_land DESC
+		LIMIT #{startList}, #{listSize}
+	</select>
+<!-- 후기 테마별 정렬 -->
+	<select id="selectAll_reviewTheme" resultType="BoardBean">
+		select * from board
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="searchType=='board_sub' and keyword != null and keyword != '' ">
+				AND board_sub like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='board_land' and keyword != null and keyword != '' ">
+				AND board_land like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='board_theme' and keyword != null and keyword != '' ">
+				AND board_theme like CONCAT('%', #{keyword}, '%')
+			</if>	
+		</trim>
+		ORDER BY board_theme DESC
+		LIMIT #{startList}, #{listSize}
+	</select>
+	
+
+	
+	<select id="selectOne_review" resultType="BoardBean" parameterType="int">
+		select * from board where board_no=#{value}
+	</select>
+	
+	
+	<insert id="insertOne_review" parameterType="BoardBean">
+		insert into board (board_id, board_sub, board_count, board_content, client_nick1, board_date, board_land, board_theme, board_img, board_thumb) values (2, #{board_sub}, 0, #{board_content}, #{client_nick1}, now(), #{board_land}, #{board_theme}, #{board_img, jdbcType=VARCHAR}, #{board_thumb, jdbcType=VARCHAR})
+	</insert>
+	
+	
+	
+	<update id="updateOne_review" parameterType="BoardBean">
+		update board set board_sub=#{board_sub}, board_content=#{board_content}, board_land=#{board_land}, board_theme=#{board_theme}, board_img=#{board_img}, board_thumb=#{board_thumb} where board_no=#{board_no}
+	</update>
+	
+
+
+	<delete id="deleteOne_review" parameterType="int">
+		delete from board where board_no=#{value}
+	</delete>
+	
+	
+	
+<!-- 조회수 -->
+	<update id="updateCnt" parameterType="int">
+		update board set board_count=board_count+1 where board_no=#{value}
+	</update>
+	
+<!-- update 페이지 나라 조회 -->
+	<select id="select_land" resultType="BoardBean">
+		select board_land from board where board_no=#{value}
+	</select>
+	
+<!-- 총게시글 갯수 -->
+	<select id="getBoardListCnt" resultType="int">
+		select count(*) from board
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="searchType=='board_sub' and keyword != null and keyword != '' ">
+				AND board_sub like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='board_land' and keyword != null and keyword != '' ">
+				AND board_land like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='board_theme' and keyword != null and keyword != '' ">
+				AND board_theme like CONCAT('%', #{keyword}, '%')
+			</if>	
+		</trim>
+	</select>
+	
+	
+<!-- 내가 쓴 글 -->
+	<resultMap type="PartnerBean" id="myBoard_partner">
+		<result property="board_id" column="board_id"/>
+		<result property="board_no" column="board_no"/>
+		<result property="partner_sub" column="partner_sub"/>
+		<result property="partner_date" column="partner_date"/>
+		<result property="partner_count" column="partner_count"/>
+	</resultMap>
+	
+	<resultMap type="FreeBean" id="myBoard_free">
+		<result property="board_id" column="board_id"/>
+		<result property="board_no" column="board_no"/>
+		<result property="free_sub" column="free_sub"/>
+		<result property="free_date" column="free_date"/>
+		<result property="free_count" column="free_count"/>
+	</resultMap>
+	
+	<resultMap type="BoardBean" id="myBoard_board">
+		<result property="board_id" column="board_id"/>
+		<result property="board_no" column="board_no"/>
+		<result property="board_sub" column="board_sub"/>
+		<result property="board_date" column="board_date"/>
+		<result property="board_count" column="board_count"/>
+		
+		<collection property="PartnerVo" resultMap="myBoard_partner"/>
+		<collection property="FreeVo" resultMap="myBoard_free"/>
+	</resultMap>
+	
+	<select id="myBoardList" resultType="BoardBean" parameterType="BoardBean" resultMap="myBoard_board">
+		select * from (
+			select board_id, board_no, board_sub, board_date, board_count from board where client_nick1=#{client_nick1}
+			union
+			select board_id, board_no, partner_sub, partner_date, partner_count from partner where client_nick1=#{client_nick1}
+			union
+			select board_id, board_no, free_sub, free_date, free_count from free where client_nick1=#{client_nick1}
+		) as board_table
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="searchType=='board_sub' and keyword != null and keyword != '' ">
+				AND board_sub like CONCAT('%', #{keyword}, '%')
+			</if>
+		</trim>
+		order by board_date desc
+		LIMIT #{startList}, #{listSize}
+	</select>
+	
+	<select id="myBoardTotal" resultType="int" parameterType="BoardBean">
+		select count(*) from (
+			select board_id, board_no, board_sub, board_date, board_count from board where client_nick1=#{client_nick1}
+			union
+			select board_id, board_no, partner_sub, partner_date, partner_count from partner where client_nick1=#{client_nick1}
+			union
+			select board_id, board_no, free_sub, free_date, free_count from free where client_nick1=#{client_nick1}
+		) as board_table
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="searchType=='board_sub' and keyword != null and keyword != '' ">
+				AND board_sub like CONCAT('%', #{keyword}, '%')
+			</if>
+		</trim>
+	</select>
+</mapper>

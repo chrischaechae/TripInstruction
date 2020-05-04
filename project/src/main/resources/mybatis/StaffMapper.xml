@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+	board_id < 투어 : 1 / 후기 : 2 / 동행 : 3 / 게시판 : 4 / 이벤트 : 5 >
+	board_theme < 힐링 : 1 / 스탭 : 2 / 액티비티 : 3 / 먹거리 : 4 / 영화 : 5 / 스포츠 : 6 >
+	board_wish < 안찜 : 0 / 찜 : 1 >
+	staff_team < 경영 : 1 / 인사 : 2 / CS : 3 / 디자인 : 4 / 마케팅 : 5 >
+	paid_state < 미결제 : 0 / 결제 : 1 >
+	paid_confirm < 미확정 : 0 / 확정 : 1 >
+ -->
+ 
+ 
+<mapper namespace="staff">
+	<select id="selectAll_staff" resultType="StaffBean">
+		select *  from staff
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="searchType=='staff_name' and keyword != null and keyword != '' ">
+				AND staff_name like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='staff_no' and keyword != null and keyword != '' ">
+				AND staff_no like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='staff_team' and keyword != null and keyword != '' ">
+				AND staff_team like CONCAT('%', #{keyword}, '%')
+			</if>	
+		</trim>
+		ORDER BY staff_no DESC
+		LIMIT #{startList}, #{listSize}
+	</select>
+<!-- 직원 사번별 정렬 -->
+	<select id="selectAll_staffNo" resultType="StaffBean">
+		select * from staff
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="searchType=='staff_name' and keyword != null and keyword != '' ">
+				AND staff_name like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='staff_no' and keyword != null and keyword != '' ">
+				AND staff_no like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='staff_team' and keyword != null and keyword != '' ">
+				AND staff_team like CONCAT('%', #{keyword}, '%')
+			</if>	
+		</trim>
+		ORDER BY staff_no
+		LIMIT #{startList}, #{listSize}
+	</select>
+<!-- 직원 부서별 정렬 -->
+	<select id="selectAll_staffTeam" resultType="StaffBean">
+		select * from staff
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="searchType=='staff_name' and keyword != null and keyword != '' ">
+				AND staff_name like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='staff_no' and keyword != null and keyword != '' ">
+				AND staff_no like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='staff_team' and keyword != null and keyword != '' ">
+				AND staff_team like CONCAT('%', #{keyword}, '%')
+			</if>	
+		</trim>
+		ORDER BY staff_team
+		LIMIT #{startList}, #{listSize}
+	</select>
+	
+<!-- 총게시글 갯수 -->
+	<select id="getStaffListCnt" resultType="int">
+		select count(*) from staff
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="searchType=='staff_name' and keyword != null and keyword != '' ">
+				AND staff_name like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='staff_no' and keyword != null and keyword != '' ">
+				AND staff_no like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='staff_team' and keyword != null and keyword != '' ">
+				AND staff_team like CONCAT('%', #{keyword}, '%')
+			</if>	
+		</trim>
+	</select>	
+
+	
+	<select id="selectOne_staff" resultType="StaffBean" parameterType="int">
+		select * from staff where staff_no=#{staff_no}
+	</select>
+<!-- 직원 pw 는 최조 핸드폰번호와 동일하게 설정 -->
+	<insert id="insertOne_staff" parameterType="StaffBean">
+		insert into staff (staff_name, staff_phone, staff_email, staff_team, staff_joindate, staff_pw, staff_img, staff_thumb) values (#{staff_name}, #{staff_phone}, #{staff_email}, #{staff_team}, now(), #{staff_phone}, #{staff_img}, #{staff_thumb})
+	</insert>
+	
+	<update id="updateOne_staff" parameterType="StaffBean">
+		update staff set staff_name=#{staff_name}, staff_phone=#{staff_phone}, staff_email=#{staff_email}, staff_team=#{staff_team}, staff_img=#{staff_img}, staff_thumb=#{staff_thumb} where staff_no=#{staff_no}
+	</update>
+	
+	<delete id="deleteOne_staff" parameterType="int">
+		delete from staff where staff_no=#{staff_no}
+	</delete>
+	
+	<select id="stafflogin" resultType="StaffBean">
+		select * from staff where staff_no=#{staff_no} and staff_pw=#{staff_pw}
+	</select>
+	
+	<update id="changePw" parameterType="ClientBean">
+		update staff set staff_pw=#{staff_pw} where staff_no=#{staff_no}
+	</update>
+	
+</mapper>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!--
+	board_id < 투어 : 1 / 후기 : 2 / 동행 : 3 / 게시판 : 4 / 이벤트 : 5 >
+	board_theme < 힐링 : 1 / 스탭 : 2 / 액티비티 : 3 / 먹거리 : 4 / 영화 : 5 / 스포츠 : 6 >
+	board_wish < 안찜 : 0 / 찜 : 1 >
+	staff_team < 경영 : 1 / 인사 : 2 / CS : 3 / 디자인 : 4 / 마케팅 : 5 >
+	paid_state < 미결제 : 0 / 결제 : 1 >
+	paid_confirm < 미확정 : 0 / 확정 : 1 >
+ -->
+ 
+ 
+<mapper namespace="notice">
+	<select id="selectAll_notice" resultType="NoticeBean">
+		select * from notice
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="searchType=='notice_sub' and keyword != null and keyword != '' ">
+				AND notice_sub like CONCAT('%', #{keyword}, '%')
+			</if>
+		</trim>
+		order by notice_no desc
+		LIMIT #{startList}, #{listSize}
+	</select>
+	
+	<select id="selectOne_notice" resultType="NoticeBean" parameterType="int">
+		select * from notice where notice_no=#{notice_no}
+	</select>
+	
+	<insert id="insertOne_notice" parameterType="NoticeBean">
+		insert into notice (notice_count, notice_date, notice_sub, notice_content, notice_img, notice_thumb) values (0, now(), #{notice_sub}, #{notice_content}, #{notice_img, jdbcType=VARCHAR}, #{notice_thumb, jdbcType=VARCHAR})
+	</insert>
+	
+	<update id="updateOne_notice" parameterType="NoticeBean">
+		update notice set notice_sub=#{notice_sub}, notice_content=#{notice_content}, notice_img=#{notice_img}, notice_thumb=#{notice_thumb}  where notice_no=#{notice_no}
+	</update>
+	
+	<delete id="deleteOne_notice" parameterType="int">
+		delete from notice where notice_no=#{notice_no}
+	</delete>
+	
+	
+	<!-- 조회수 -->
+	<update id="updateCnt" parameterType="int">
+		update notice set notice_count=notice_count+1 where notice_no=#{value}
+	</update>
+	
+<!-- 총게시글 갯수 -->
+	<select id="getNoticeListCnt" resultType="int">
+		select count(*) from notice
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="searchType=='notice_sub' and keyword != null and keyword != '' ">
+				AND notice_sub like CONCAT('%', #{keyword}, '%')
+			</if>
+		</trim>
+	</select>
+</mapper>

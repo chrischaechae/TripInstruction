@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="wish">
+
+	<select id="selectAll_wish" resultType="WishBean" parameterType="WishBean" resultMap="WishMap">
+		select tour.tour_no,tour.mainimg,tour.name,tour.city,tour.country,tour.cost from wish inner join tour on wish.tour_no=tour.tour_no
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="client_name!=null and client_name!=''">
+				AND client_name=#{client_name}
+			</if>
+		</trim>
+		order by wish_no desc
+	</select>
+	
+	<select id="keep_wish" resultType="WishBean" parameterType="WishBean">
+		select wishchk,wish_no from wish where client_name=#{client_name} and tour_no=#{tour_no} 	
+	</select>
+	
+	
+		<!--  wish join tour -->
+	<resultMap type="WishBean" id="WishMap">
+		<result property="wish_no" column="wish_no"/>
+		<result property="tour_no" column="tour_no"/>
+		<result property="client_name" column="client_name"/>
+		<result property="wish_chk" column="wish_chk"/>
+		
+		<association property="TourVo" resultMap="TourVo"/>
+	</resultMap>
+	
+	<resultMap type="TourBean" id="TourVo">
+		<result property="tour_no" column="tour_no"/>
+		<result property="country" column="country"/>
+		<result property="city" column="city"/>
+		<result property="name" column="name"/>
+		<result property="cost" column="cost"/>
+		<result property="mainimg" column="mainimg"/>
+		
+	</resultMap>
+	
+	
+	<insert id="insert_wish" parameterType="WishBean">
+		insert into wish (tour_no, client_name, wishchk) values (#{tour_no}, #{client_name}, 1)
+	</insert>
+	
+	<delete id="delete_wish" parameterType="WishBean">
+		delete from wish where wish_no=#{wish_no}
+	</delete>
+	
+</mapper>

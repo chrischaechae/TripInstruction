@@ -1,0 +1,92 @@
+	#allContain {
+		width:1100px;
+		margin:0 auto;
+		padding-left:120px;
+		font-family: 'Jua';
+	}
+	#containerTable {
+		width:1100px;
+		margin:0 auto;
+		padding:10 0;
+		font-size:16px;
+	}
+/* 나라정렬 버튼 */
+	#theme {
+		width:1100px;
+		margin:0 auto;
+		padding:8 0;
+	}
+/* 정렬버튼 */
+	#dropdownMenu1:hover {
+		background-color:#e8e8e8;
+	}
+
+/* 나라정렬 조회버튼 */
+	#sel {
+		display:inline-block;
+		border-radius:5px;
+		font-size:14px;
+		text-align:center;
+		height:30px;
+		vertical-align:middle;
+	}
+/* 글쓰기 버튼 div */
+	#fff {
+		padding:0px 380px;
+		display:inline-block;
+	}
+/* 글쓰기 <a> 너비 */
+	#wri {
+		width:79px;
+	}
+	#containerTable>tbody td,
+	#containerTable>tbody td>a {
+		font-size:15px;
+	}
+	#containerTable th,
+	#containerTable td {
+		text-align:center;
+	}
+	#containerTable>tbody td {
+		font-size:15px;
+	}
+	#containerTable>thead th:nth-child(1) {
+		width:80px;
+	}
+	#containerTable>thead th:nth-child(2) {
+		width:650px;
+	}
+	#containerTable>thead th:nth-child(3) {
+		width:110px;
+	}
+	#containerTable>thead th:nth-child(4) {
+		width:180px;
+	}
+	#containerTable>thead th:nth-child(5) {
+		width:80px;
+	}
+	#containerTable>tbody td:nth-child(2) {
+		text-align:left;
+	}
+	#containerTable>tbody td>a {
+		text-decoration:none;
+	}
+	#containerTable>tbody td>a:hover {
+		color:black;
+	}
+	#pageNum {
+		padding:20 0;
+	}
+	#pageNum, #search {
+		width:350px;      
+		margin:0 auto;
+		text-align:center;
+	}
+	tbody td>a {
+		color:black;
+		text-decoration:none;
+   }
+	.dropdown {
+		font-family: 'Jua';
+		font-size: 18px;
+	}

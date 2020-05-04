@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+	board_id < 투어 : 1 / 후기 : 2 / 동행 : 3 / 게시판 : 4 / 이벤트 : 5 >
+	board_theme < 힐링 : 1 / 스탭 : 2 / 액티비티 : 3 / 먹거리 : 4 / 영화 : 5 / 스포츠 : 6 >
+	board_wish < 안찜 : 0 / 찜 : 1 >
+	staff_team < 경영 : 1 / 인사 : 2 / CS : 3 / 디자인 : 4 / 마케팅 : 5 >
+	paid_state < 미결제 : 0 / 결제 : 1 >
+	paid_confirm < 미확정 : 0 / 확정 : 1 >
+ -->
+ 
+ 
+<mapper namespace="send">
+	<select id="selectAll_send" resultType="SendBean">
+		select * from send order by send_no desc
+	</select>
+	
+	<select id="selectOne_send" resultType="SendBean" parameterType="int">
+		select * from send where send_no=#{send_no}
+	</select>
+	
+	<insert id="insertOne_send" parameterType="SendBean">
+		insert into send (client_nick1, client_nick2, send_content, send_date) values (#{client_nick1}, #{client_nick2}, #{send_content}, now())
+	</insert>
+	
+	<delete id="deleteOne_send" parameterType="int">
+		delete from send where send_no=#{send_no}
+	</delete>
+</mapper>

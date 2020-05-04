@@ -1,0 +1,43 @@
+form {
+		font-family:"Jua";
+		background-color:#e8e8e8;
+		width:500px;
+		margin:0 auto;
+	}
+	#formTb {
+		width:490px;
+		margin:0 auto;
+		padding:15px 15px 5px 20px;
+	}
+	#receiver, #client_nick2, #receive_date {
+		font-size:15px;
+		display:inline-block;
+		border:0;
+		outline:0;
+		background-color:rgba(1,1,1,0);
+	}
+	#receiver, #receive_date {
+		font-weight:bold;
+	}
+	#receiver {
+		width:70px;
+		padding:0 0 0 10px;
+	}
+	#receive_date {
+		width:200px;
+		color:gray;
+		padding:0 0 0 70px;
+	}
+	#send_content, #receive_content {
+		width:450px;
+		height:250px;
+		resize:none;
+		background-color:white;
+		cursor:auto;
+	}
+	#btn {
+		padding:0 0 0 220px;
+	}
+	#sendMsg, #cancel {
+		width:100px;
+	}

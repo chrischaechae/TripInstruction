@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!--
+	board_id < 투어 : 1 / 후기 : 2 / 동행 : 3 / 게시판 : 4 / 이벤트 : 5 >
+	board_theme < 힐링 : 1 / 스탭 : 2 / 액티비티 : 3 / 먹거리 : 4 / 영화 : 5 / 스포츠 : 6 >
+	board_wish < 안찜 : 0 / 찜 : 1 >
+	staff_team < 경영 : 1 / 인사 : 2 / CS : 3 / 디자인 : 4 / 마케팅 : 5 >
+	paid_state < 미결제 : 0 / 결제 : 1 >
+	paid_confirm < 미확정 : 0 / 확정 : 1 >
+ -->
+ 
+ 
+<mapper namespace="receive">
+<!-- 전체 받은 쪽지 리스트 -->
+	<select id="selectAll_receive" resultType="ReceiveBean" parameterType="ReceiveBean">
+		select * from receive
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="searchType=='receive_content' and keyword != null and keyword != '' ">
+				AND receive_content like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='client_nick1' and keyword != null and keyword != '' ">
+				AND client_nick1 like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="client_nick2!=null and client_nick2!=''">
+				AND client_nick2=#{client_nick2}
+			</if>
+		</trim>
+		order by receive_no desc
+		LIMIT #{startList}, #{listSize}
+	</select>
+<!-- 쪽지 읽기 -->
+	<select id="selectOne_receive" resultType="ReceiveBean" parameterType="int">
+		select * from receive where receive_no=#{receive_no}
+	</select>
+
+<!-- 실시간 받은 쪽지 -->
+	<select id="selectOne_receiveLimitOne" resultType="ReceiveBean" parameterType="String">
+		select * from receive where client_nick2=#{client_nick2} order by receive_no desc limit 1
+	</select>
+<!-- 읽지 않은 쪽지 -->
+	<select id="select_receiveUnCnt" resultType="int" parameterType="ReceiveBean">
+		select count(*) from receive where receive_status=0 and client_nick2=#{client_nick2}
+	</select>
+	
+<!-- 쪽지 읽음 처리 -->
+	<update id="updateOne_receive" parameterType="int">
+		update receive set receive_status=1 where receive_no=#{receive_no}
+	</update>
+	
+<!-- 쪽지 삭제 -->
+	<delete id="deleteOne_receive" parameterType="int">
+		delete from receive where receive_no=#{receive_no}
+	</delete>
+
+<!-- 총게시글 갯수 -->
+	<select id="getReceiveListCnt" resultType="int">
+		select count(*) from receive
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="searchType=='receive_content' and keyword != null and keyword != '' ">
+				AND receive_content like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='client_nick1' and keyword != null and keyword != '' ">
+				AND client_nick1 like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="client_nick2!=null and client_nick2!=''">
+				AND client_nick2=#{client_nick2}
+			</if>
+		</trim>
+	</select>
+</mapper>
