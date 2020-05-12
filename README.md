@@ -5,5 +5,6 @@
 * [Class Diagram](https://github.com/chrischaechae/TripInstruction/blob/master/ClassDiagram.gif)
 * [ER-Diagram](https://github.com/chrischaechae/TripInstruction/blob/master/ER-Diagram.png)
 * [메뉴설계도](https://github.com/chrischaechae/TripInstruction/blob/master/%EB%A9%94%EB%89%B4%EC%84%A4%EA%B3%84%EB%8F%84.pdf)
+* [발표시연영상](https://www.youtube.com/watch?v=UAC2pSjvqbs&t=555s)
 * [프로젝트 소스코드](https://github.com/chrischaechae/TripInstruction/tree/master/project)
 
